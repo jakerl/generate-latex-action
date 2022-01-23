@@ -9,12 +9,16 @@ inputs:
     description: 'path to the directory you want the generated pdf to be placed'
     required: true
     default: 'output'
+  extra-arguments:
+    description: 'path to the directory you want the generated pdf to be placed'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
     - run: docker run --name latex-container -dit -v $(pwd):/source jakerl/latex
       shell: bash
-    - run: docker exec latex-container latexmk -output-directory=source/${{ inputs.output-directory }} source/${{ inputs.path-to-tex-file }}
+    - run: docker exec latex-container latexmk -output-directory=source/${{ inputs.output-directory }} source/${{ inputs.path-to-tex-file }} ${{ inputs.extra-arguments  }}
       shell: bash
     - run: docker stop latex-container; docker rm latex-container
       shell: bash
